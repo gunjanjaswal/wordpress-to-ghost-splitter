@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WordPress to Ghost XML Splitter</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+            background-color: #f8f9fa;
+        }
+        .header {
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #e5e5e5;
+            padding-bottom: 1rem;
+        }
+        .footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e5e5;
+            color: #6c757d;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        .progress {
+            height: 25px;
+        }
+        .alert {
+            margin-top: 1rem;
+        }
+        .ghost-color {
+            color: #15171A;
+        }
+        .wordpress-color {
+            color: #0073aa;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .logo-container img {
+            height: 40px;
+            margin: 0 10px;
+        }
+        .icon-large {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header text-center">
+            <h1><span class="wordpress-color">WordPress</span> to <span class="ghost-color">Ghost</span> XML Splitter</h1>
+            <div class="logo-container">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 256 256">
+                    <path fill="#0073aa" d="M128 0C57.29 0 0 57.29 0 128s57.29 128 128 128s128-57.29 128-128S198.71 0 128 0m0 12.8c63.64 0 115.2 51.56 115.2 115.2c0 63.64-51.56 115.2-115.2 115.2c-63.64 0-115.2-51.56-115.2-115.2c0-63.64 51.56-115.2 115.2-115.2M39.93 128c0 35.69 20.73 66.53 50.73 81.07L43.2 82.4c-2.13 14.6-3.27 29.33-3.27 45.6m143.36-3.84c0-11.15-4-18.88-7.44-24.85c-4.57-7.4-8.85-13.67-8.85-21.07c0-8.26 6.25-15.94 15.06-15.94c.4 0 .77.05 1.16.07c-15.95-14.6-37.18-23.52-60.5-23.52c-31.3 0-58.8 16.07-74.87 40.38c2.1.07 4.08.1 5.76.1c9.35 0 23.82-1.13 23.82-1.13c4.8-.29 5.37 6.77.58 7.35c0 0-4.83.57-10.18.86l32.38 96.26l19.46-58.32l-13.86-37.94c-4.8-.29-9.35-.86-9.35-.86c-4.8-.28-4.25-7.64.57-7.35c0 0 14.76 1.13 23.55 1.13c9.34 0 23.82-1.13 23.82-1.13c4.82-.29 5.38 6.77.58 7.35c0 0-4.85.57-10.18.86l32.14 95.54l8.88-29.7c3.85-12.3 6.77-21.16 6.77-28.8m-56.32 12.3L99.52 195.9a115.35 115.35 0 0 0 35.36 5.26c14.6 0 28.62-2.53 41.6-7.1c-.33-.54-.64-1.1-.9-1.73zm68.82-45.4c.4 2.9.62 6.03.62 9.4c0 9.27-1.74 19.69-6.94 32.7l-27.85 80.58c27.14-15.82 45.4-45.24 45.4-78.94c0-15.84-4.1-30.7-11.23-43.74"></path>
+                </svg>
+                <span class="fs-1">→</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 600 600">
+                    <path fill="#15171A" d="M245.55 132.6c-30.88 0-56 25.12-56 56c0 30.88 25.12 56 56 56c30.88 0 56-25.12 56-56c0-30.88-25.12-56-56-56m-151.2 56c0 83.45 67.76 151.2 151.2 151.2c83.45 0 151.2-67.76 151.2-151.2c0-83.45-67.76-151.2-151.2-151.2c-83.45 0-151.2 67.76-151.2 151.2m151.2-190.4c104.3 0 189.6 85.3 189.6 189.6v228c0 104.3-85.3 189.6-189.6 189.6c-104.3 0-189.6-85.3-189.6-189.6v-228c0-104.3 85.3-189.6 189.6-189.6m227.2 189.6c0-125.16-102.04-227.2-227.2-227.2c-125.16 0-227.2 102.04-227.2 227.2v228c0 125.16 102.04 227.2 227.2 227.2c125.16 0 227.2-102.04 227.2-227.2v-228"></path>
+                </svg>
+            </div>
+            <p class="lead">Split your large WordPress XML export into smaller chunks for Ghost import</p>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% block content %}{% endblock %}
+        
+        <div class="footer text-center">
+            <p>
+                <a href="{{ url_for('reset') }}" class="btn btn-outline-secondary">Start Over</a>
+            </p>
+            <p>
+                <small>Created to help WordPress users migrate to Ghost | {{ now.year }}</small>
+            </p>
+            <p>
+                <small>Developed by <a href="https://gunjanjaswal.me" target="_blank">Gunjan Jaswal</a> | <a href="mailto:hello@gunjanjaswal.me">hello@gunjanjaswal.me</a></small>
+            </p>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

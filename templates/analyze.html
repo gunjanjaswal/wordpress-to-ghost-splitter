@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title text-center">Analyze WordPress Export</h2>
+            </div>
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="icon-large">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-file-earmark-bar-graph" viewBox="0 0 16 16">
+                            <path d="M10 13.5a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-6a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v6zm-2.5.5a.5.5 0 0 1-.5-.5v-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5h-1zm-3 0a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.5.5h-1z"/>
+                            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+                        </svg>
+                    </div>
+                    <p class="lead">Analysis of <strong>{{ filename }}</strong></p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Content Summary</h5>
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Total Items</th>
+                                <td>{{ counts.total }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Posts</th>
+                                <td>{{ counts.posts }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Pages</th>
+                                <td>{{ counts.pages }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Attachments</th>
+                                <td>{{ counts.attachments }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Other Items</th>
+                                <td>{{ counts.other }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="mb-4">
+                    <h5>Ghost Import Recommendation</h5>
+                    {% set recommended_chunk_size = 50 if counts.total > 500 else 100 %}
+                    <div class="alert alert-info">
+                        <p>Based on your file size ({{ counts.total }} items), we recommend splitting into chunks of <strong>{{ recommended_chunk_size }}</strong> items each.</p>
+                        <p>This will create approximately <strong>{{ (counts.total / recommended_chunk_size) | round(0, 'ceil') | int }}</strong> files to import into Ghost.</p>
+                    </div>
+                </div>
+                
+                <form action="{{ url_for('split') }}" method="post" class="mb-4">
+                    <div class="mb-3">
+                        <label for="chunk_size" class="form-label">Items per chunk</label>
+                        <input type="number" class="form-control" id="chunk_size" name="chunk_size" value="{{ recommended_chunk_size }}" min="10" max="500" required>
+                        <div class="form-text">Smaller chunks are safer but create more files to import. For Ghost, 50-100 items per file usually works well.</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Include content types (optional)</label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="post" id="post_type_post" name="post_types" checked>
+                            <label class="form-check-label" for="post_type_post">
+                                Posts ({{ counts.posts }})
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="page" id="post_type_page" name="post_types" checked>
+                            <label class="form-check-label" for="post_type_page">
+                                Pages ({{ counts.pages }})
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="attachment" id="post_type_attachment" name="post_types" checked>
+                            <label class="form-check-label" for="post_type_attachment">
+                                Attachments ({{ counts.attachments }})
+                            </label>
+                        </div>
+                        <div class="form-text">Leave all unchecked to include all content types.</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Split XML File</button>
+                    </div>
+                </form>
+                
+                <div class="alert alert-warning">
+                    <h5>Important Notes</h5>
+                    <ul>
+                        <li>Splitting may take a few minutes for large files</li>
+                        <li>Each chunk will contain the necessary WordPress metadata</li>
+                        <li>You'll need to import each chunk separately into Ghost</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
